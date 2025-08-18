@@ -1,5 +1,5 @@
 import { User } from "../user/user.model";
-import { IRide } from "./ride.interface";
+import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 
 const createRide = async (payload: Partial<IRide> & {riderName: string}) => {
@@ -38,10 +38,30 @@ const getRideHistory = async(payload: string) => {
 
 }
 
+const cancelRide = async(id: string, riderId: string) => {
+
+
+    const ride = await Ride.findOne({_id: id, rider: riderId});
+
+    if(!ride){
+        throw new Error("Ride does not exist or you are not the rider");
+    }
+
+    if(ride.status !== RideStatus.REQUESTED){
+        throw new Error("Ride is not in requested status");
+    }
+
+    ride.status = RideStatus.CANCELLED;
+    await ride.save();
+
+    return ride;
+}
+
 
 
 export const RideServices = {
     createRide,
     getAllRide,
-    getRideHistory
+    getRideHistory,
+    cancelRide
 }
