@@ -27,11 +27,66 @@ const getAllUser = catchAsync(async (req, res, next) => {
     })
 })
 
+const approveDriver = catchAsync(async(req, res, next) => {
+    const {id} = req.params;
+
+    const updateDriverStatus = await UserServices.approveDriver(id);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Driver approved successfully",
+        data: updateDriverStatus,
+    })
 
 
 
+})
+
+const suspendDriver = catchAsync(async(req, res, next) => {
+    const {id} = req.params;
+
+    const updateDriverStatus = await UserServices.suspendDriver(id);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Driver suspended successfully",
+        data: updateDriverStatus,
+    })
+})
+
+const blockUser = catchAsync(async(req, res, next) => {
+    const {id} = req.params;
+
+    const updateDriverStatus = await UserServices.blockUser(id);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Driver suspended successfully",
+        data: updateDriverStatus,
+    })
+})
+
+const unblockUser = catchAsync(async(req, res, next) => {
+    const {id} = req.params;
+
+    const updateDriverStatus = await UserServices.unblockUser(id);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Driver suspended successfully",
+        data: updateDriverStatus,
+    })
+})
 
 export const UserControllers = {
     createUser,
     getAllUser,
+    approveDriver,
+    suspendDriver,
+    blockUser,
+    unblockUser,
 }

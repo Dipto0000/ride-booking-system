@@ -1,4 +1,4 @@
-import { IUser } from "./user.interface";
+import { AccountStatus, DriverStatus, IUser } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from "bcryptjs";
 
@@ -34,6 +34,34 @@ const getAllUser = async()=>{
     return users;
 }
 
+const approveDriver = async(id: string) => {
+
+    const driver = await User.findOneAndUpdate({_id: id}, {driverStatus: DriverStatus.APPROVED}, {new: true});
+
+    return driver
+}
+
+const suspendDriver = async(id: string) => {
+
+    const driver = await User.findOneAndUpdate({_id: id}, {driverStatus: DriverStatus.SUSPENDED}, {new: true});
+
+    return driver
+}
+
+const blockUser = async(id: string) => {
+
+    const user = await User.findOneAndUpdate({_id: id}, {accountStatus: AccountStatus.BLOCKED}, {new: true});
+
+    return user
+}
+
+const unblockUser = async(id: string) => {
+
+    const user = await User.findOneAndUpdate({_id: id}, {accountStatus: AccountStatus.ACTIVE}, {new: true});
+
+    return user
+}
+
 
 
 
@@ -42,4 +70,8 @@ const getAllUser = async()=>{
 export const UserServices = {
         createUser,
         getAllUser,
+        approveDriver,
+        suspendDriver,
+        blockUser,
+        unblockUser,
     }

@@ -7,10 +7,15 @@ export enum Role {
     DRIVER = "Driver"
 }
 
-export enum IsActive {
+export enum AccountStatus {
     ACTIVE = "Active",
-    BLOCKED = "Blocked",
-    SUSPENDED = "Suspended"
+    BLOCKED = "Blocked"
+}
+
+export enum DriverStatus {
+    PENDING = "Pending",   
+    APPROVED = "Approved", 
+    SUSPENDED = "Suspended" 
 }
 
 export interface IDriverDetails {
@@ -22,8 +27,9 @@ export interface IUser {
     _id?: Types.ObjectId
     name: string;
     email: string;
-    password: string;
+    password?: string;
     role: Role;
-    isActive?: IsActive;
+    accountStatus?: AccountStatus;
+    driverStatus?: DriverStatus;
     driverDetails?: IDriverDetails
 }
