@@ -36,7 +36,7 @@ const getRideHistory = async(payload: string) => {
     
     const history = await Ride.find({rider: payload});
 
-    console.log("history", history);
+    
     return history;
 
 }

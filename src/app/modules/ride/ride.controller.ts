@@ -34,7 +34,7 @@ const getAllRide = catchAsync(async(req, res) => {
 const getRideHistory = catchAsync(async(req, res) => {
 
 
-    console.log("Jwt user", req.user);
+    
     const riderID = req.user?.userId;
 
     const rideHistory = await RideServices.getRideHistory(riderID);
