@@ -32,7 +32,7 @@ export const createNewUserTokenWithRefreshToken = async(refreshToken: string) =>
         throw new Error("User does not exist");
     }
 
-    if(isUserExist.isActive === "Blocked" || isUserExist.isActive === "Suspended"){
+    if(isUserExist.accountStatus === "Blocked" || isUserExist.driverStatus === "Suspended"){
         throw new Error("User is blocked or suspended");
     }
 
