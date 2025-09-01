@@ -9,11 +9,11 @@ export const router = Router();
 const moduleRoutes = [
 
    {
-     path: "/user",
+     path: "/users",
      route: UserRoutes
    },
    {
-    path: "/ride",
+    path: "/rides",
     route: RideRoutes
    },
    {

@@ -104,7 +104,7 @@ const driverRejectRide = async(rideId: string, driver: JwtPayload) => {
     }
 
     if(ride.status !== RideStatus.REQUESTED){
-        throw new Error("Ride cannot rejected now.");
+        throw new Error("Ride cannot be rejected now.");
     }
 
     ride.status = RideStatus.CANCELLED;
