@@ -1,6 +1,7 @@
-import { AccountStatus, DriverStatus, IUser } from "./user.interface";
+import { AccountStatus, DriverStatus, IEmergencyContact, IUser } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from "bcryptjs";
+import { JwtPayload } from "jsonwebtoken";
 
 
 const createUser = async(payload: Partial<IUser>) => {
@@ -26,10 +27,19 @@ const createUser = async(payload: Partial<IUser>) => {
     return user;
 }
 
-const getAllUser = async()=>{
-    const users = await User.find()
+const getAllUser = async(query: any)=>{
+    const { role, status } = query;
+    const filter: any = {};
 
-    const totalUsers = await User.countDocuments();
+    if (role) {
+        filter.role = role;
+    }
+
+    if (status) {
+        filter.accountStatus = status;
+    }
+
+    const users = await User.find(filter);
 
     return users;
 }
@@ -62,8 +72,47 @@ const unblockUser = async(id: string) => {
     return user
 }
 
+const getMe = async (user: JwtPayload) => {
+    const result = await User.findById(user.userId);
+    return result;
+}
 
+const updateMe = async (user: JwtPayload, payload: Partial<IUser>) => {
+    const { password, ...rest } = payload;
 
+    const updatedUserData:Partial<IUser> = {...rest}
+
+    if (password) {
+        const hashedPassword = await bcryptjs.hash(password, 10);
+        updatedUserData.password = hashedPassword;
+    }
+
+    const result = await User.findByIdAndUpdate(user.userId, updatedUserData, { new: true });
+    return result;
+}
+
+const addEmergencyContact = async (user: JwtPayload, payload: IEmergencyContact) => {
+    const result = await User.findByIdAndUpdate(
+        user.userId,
+        { $push: { emergencyContacts: payload } },
+        { new: true }
+    );
+    return result;
+};
+
+const getEmergencyContacts = async (user: JwtPayload) => {
+    const result = await User.findById(user.userId).select("emergencyContacts");
+    return result;
+};
+
+const deleteEmergencyContact = async (user: JwtPayload, contactId: string) => {
+    const result = await User.findByIdAndUpdate(
+        user.userId,
+        { $pull: { emergencyContacts: { _id: contactId } } },
+        { new: true }
+    );
+    return result;
+};
 
 
 
@@ -74,4 +123,9 @@ export const UserServices = {
         suspendDriver,
         blockUser,
         unblockUser,
+        getMe,
+        updateMe,
+        addEmergencyContact,
+        getEmergencyContacts,
+        deleteEmergencyContact,
     }

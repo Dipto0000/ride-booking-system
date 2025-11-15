@@ -64,8 +64,34 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
 
 });
 
+const forgotPassword = catchAsync(async(req, res, next) => {
+    const { email } = req.body;
+    const result = await AuthService.forgotPassword(email);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Password reset link sent successfully",
+        data: result,
+    })
+})
+
+const resetPassword = catchAsync(async(req, res, next) => {
+    const { token, password } = req.body;
+    const result = await AuthService.resetPassword(token, password);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Password reset successfully",
+        data: result,
+    })
+})
+
 export const AuthControllers = {
     credentialLogin,
     logout,
-    getNewAccessToken
+    getNewAccessToken,
+    forgotPassword,
+    resetPassword
 }

@@ -1,10 +1,16 @@
 import { model, Schema } from "mongoose";
-import { AccountStatus, DriverStatus, IDriverDetails, IUser, Role } from "./user.interface";
+import { AccountStatus, DriverStatus, IDriverDetails, IEmergencyContact, IUser, Role } from "./user.interface";
 
 const driverDetailsSchema = new Schema<IDriverDetails>({
     availability: {type: String, enum: ["online", "offline"], default: "offline"},
     totalEarnings: {type: Number, default: 0},
 }, {_id: false})
+
+const emergencyContactSchema = new Schema<IEmergencyContact>({
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+}, { _id: true });
+
 const userSchema = new Schema<IUser>({
     name: {type: String, required: true},
     email: {type: String, unique: true, required: true},
@@ -25,6 +31,9 @@ const userSchema = new Schema<IUser>({
         default: DriverStatus.PENDING
     },
     driverDetails: {type: driverDetailsSchema, default: {}},
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    emergencyContacts: { type: [emergencyContactSchema], default: [] },
 
 },
 {

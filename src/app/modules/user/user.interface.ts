@@ -23,6 +23,12 @@ export interface IDriverDetails {
     totalEarnings : number;
     
 }
+
+export interface IEmergencyContact {
+    name: string;
+    phone: string;
+}
+
 export interface IUser {
     _id?: Types.ObjectId
     name: string;
@@ -31,5 +37,8 @@ export interface IUser {
     role: Role;
     accountStatus?: AccountStatus;
     driverStatus?: DriverStatus;
-    driverDetails?: IDriverDetails
+    driverDetails?: IDriverDetails;
+    passwordResetToken?: string;
+    passwordResetExpires?: Date;
+    emergencyContacts?: IEmergencyContact[];
 }

@@ -5,6 +5,30 @@ import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
 import { set } from "mongoose";
 
+const getRideById = catchAsync(async(req, res) => {
+    const {id} = req.params;
+    const ride = await RideServices.getRideById(id);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Ride retrieved successfully",
+        data: ride,
+    })
+})
+
+const estimateFare = catchAsync(async(req, res) => {
+    const fare = await RideServices.estimateFare(req.body);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Fare estimated successfully",
+        data: {
+            fare
+        },
+    })
+})
 
 const rideRequest = catchAsync(async(req, res) => {
 
@@ -21,7 +45,7 @@ const rideRequest = catchAsync(async(req, res) => {
 
 const getAllRide = catchAsync(async(req, res) => {
 
-    const allRide = await RideServices.getAllRide();
+    const allRide = await RideServices.getAllRide(req.query);
 
     sendResponse(res, {
         statusCode: 200,
@@ -33,11 +57,7 @@ const getAllRide = catchAsync(async(req, res) => {
 
 const getRideHistory = catchAsync(async(req, res) => {
 
-
-    
-    const riderID = req.user?.userId;
-
-    const rideHistory = await RideServices.getRideHistory(riderID);
+    const rideHistory = await RideServices.getRideHistory(req.user as JwtPayload, req.query);
 
     sendResponse(res, {
         statusCode: 200,
@@ -114,12 +134,12 @@ const driverTotalEarning = catchAsync(async(req, res) => {
 
     const driver  = req.user as JwtPayload;
 
-    const totalEarning = await RideServices.driverTotalEarning(driver);
+    const totalEarning = await RideServices.driverTotalEarning(driver, req.query);
 
     sendResponse(res, {
         statusCode: 200,
         success: true,
-        message: "Ride status updated successfully",
+        message: "Driver earnings retrieved successfully",
         data: totalEarning,
     })
 })
@@ -139,11 +159,23 @@ const setAvailability = catchAsync(async(req, res) => {
     })
 })
 
+const triggerSOS = catchAsync(async(req, res) => {
+    const {id} = req.params;
+    const result = await RideServices.triggerSOS(id, req.user as JwtPayload);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "SOS triggered successfully",
+        data: result,
+    })
+})
 
 
 
 export const RideControllers = {
-
+    getRideById,
+    estimateFare,
     rideRequest,
     getAllRide,
     getRideHistory,
@@ -153,4 +185,5 @@ export const RideControllers = {
     driverUpdateRideStatus,
     driverTotalEarning,
     setAvailability,
+    triggerSOS,
 }
